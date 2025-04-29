@@ -27,14 +27,14 @@ and
 go run main.go -mode client -host 127.0.0.1 -port 9000 -name Ashley
 ```
 
-### Features
+## Features
 - Broadcast chat: any message from one client is delivered to all connected clients
 
 - Timestamps on every send, receive, connect, and disconnect event
 
 - Simple CLI: type your message and press Enter
 
-### Demo Steps
+## Demo Steps
 1. Start the server.
 
 2. Open two (or more) terminals and launch clients with different -name flags.
