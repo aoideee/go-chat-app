@@ -4,12 +4,18 @@ package main
 
 import(
 	"fmt"
+	"flag"
 	"net"
 	"bufio"
 	"os"
+	//"strconv"
 )
 
 func main(){
+
+	name := flag.String("name", "Unknown_Client", "Client name")
+	flag.Parse()
+
 	serverAddress := net.UDPAddr{											//Set the same server address
 		Port: 6060,
 		IP: net.ParseIP("0.0.0.0"),
@@ -20,10 +26,10 @@ func main(){
 		panic(err)
 	}
 	defer conn.Close()
-	fmt.Println("You have joined the chat and may start messaging.")
 	//localAddress := conn.LocalAddr().(*net.UDPAddr)
-	arrivalMessage := "has arrived!"
-	_, err = conn.WriteToUDP([]byte(arrivalMessage))
+	arrivalMessage := *name + " has arrived!"
+	fmt.Println(arrivalMessage)
+	_, err = conn.Write([]byte(arrivalMessage))
 	if err != nil{
 		fmt.Println("Error writing to server: ", err)
 	}
@@ -43,18 +49,15 @@ func main(){
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan(){
 		text := scanner.Text()
-		if text == ""{														//Don't write post message if empty
+		if text == ""{														//Don't post message if empty
 			continue
 		}
-		_, err := conn.WriteToUDP([]byte(text))									//Post message to server
+		text = *name + " " + text
+		fmt.Println(text)
+		_, err := conn.Write([]byte(text))									//Post message to server
 		if err != nil{
 			fmt.Println("Error writing to server: ", err)
 			break
 		}
 	}
-}
-
-func timestamp() string {
-	t := time.FixedZone("America/Chicago (No DST)", -6*60*60)
-	return time.Now().In(t).Format("[15:04:05]")
 }

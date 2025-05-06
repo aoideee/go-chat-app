@@ -6,6 +6,7 @@ import(
 	"fmt"
 	"net"
 	"time"
+	"strings"
 )
 
 func main(){
@@ -19,7 +20,7 @@ func main(){
 		panic(err)
 	}
 	defer listener.Close()
-	fmt.Println("Server listening on localhost: ", address.String())
+	fmt.Println(timestamp(), "UDP chat server listening on localhost: ", address.String())
 
 	clients := make(map[string]*net.UDPAddr)											//Array that will store the address of every message sent
 	buf := make([]byte, 1024)
@@ -31,19 +32,24 @@ func main(){
 			continue																	// //Continue starts a new iteration of the loop
 		}
 
-		message := string(buf[:n])
+		mail := string(buf[:n])
+		split := strings.SplitN(mail, " ", 2)
+
+		name := split[0]
+		message := split[1]
+
 		if message == "has arrived!"{
-			fmt.Printf("%s %s %s\n", timestamp(), clientAddress.String(), message)	
-			message = timestamp() + " " + clientAddress.String() + " " + message
+			fmt.Printf("%s %s %s\n", timestamp(), name, message)		//clientAddress.String()
+			message = name + " " + message
 		}else{
-			fmt.Printf("%s %s: %s\n", timestamp(), clientAddress.String(), message)							//Print client messages
-			message = timestamp() + " " + clientAddress.String() + ": " + message
+			fmt.Printf("%s %s: %s\n", timestamp(), name, message)							//Print client messages
+			message = name + ": " + message
 		}
 
 		clients[clientAddress.String()] = clientAddress
 
 		for _, address := range clients {												//Write messages to all clients
-			if address != clientAddress{
+			if address.String() != clientAddress.String(){
 				if _, err := listener.WriteToUDP([]byte(message), address); err != nil{
 					fmt.Println("Error writing to client ", address.String(), ":", err)
 				}
@@ -54,7 +60,7 @@ func main(){
 
 func timestamp() string {
 	t := time.FixedZone("America/Chicago (No DST)", -6*60*60)
-	return time.Now().In(t).Format("[15:04:05.000000]")
+	return time.Now().In(t).Format("[15:04:05]")
 }
 
 //Advancements: could add client timeout and removal
