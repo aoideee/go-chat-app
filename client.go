@@ -4,12 +4,18 @@ package main
 
 import(
 	"fmt"
+	"flag"
 	"net"
 	"bufio"
 	"os"
+	"time"
 )
 
 func main(){
+
+	name := flag.String("name", "Unknown_Client", "Client name")
+	flag.Parse()
+
 	serverAddress := net.UDPAddr{											//Set the same server address
 		Port: 6060,
 		IP: net.ParseIP("0.0.0.0"),
@@ -22,8 +28,8 @@ func main(){
 	defer conn.Close()
 	fmt.Println("You have joined the chat and may start messaging.")
 	//localAddress := conn.LocalAddr().(*net.UDPAddr)
-	arrivalMessage := "has arrived!"
-	_, err = conn.WriteToUDP([]byte(arrivalMessage))
+	arrivalMessage := *name + " has arrived!"
+	_, err = conn.Write([]byte(arrivalMessage))
 	if err != nil{
 		fmt.Println("Error writing to server: ", err)
 	}
@@ -46,7 +52,8 @@ func main(){
 		if text == ""{														//Don't write post message if empty
 			continue
 		}
-		_, err := conn.WriteToUDP([]byte(text))									//Post message to server
+		text = *name + ": " + text
+		_, err := conn.Write([]byte(text))									//Post message to server
 		if err != nil{
 			fmt.Println("Error writing to server: ", err)
 			break
