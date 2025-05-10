@@ -82,18 +82,14 @@ func main(){
 			address: clientAddress,
 			lastSeen: time.Now(),
 		}
-		mutex.Unlock()
-
-		for _, info := range clients {
-			fmt.Println(info.address.String(), info.lastSeen)
-		}		
+		mutex.Unlock()	
 
 		for _, info := range clients {												//Write messages to all clients
-			// if info.address != clientAddress{
+			if info.address != clientAddress{
 				if _, err := listener.WriteToUDP([]byte(message), info.address); err != nil{
 					fmt.Println("Error writing to client ", info.address.String(), ":", err)
 				}
-			// }
+			}
 		}
 	}
 }
@@ -103,6 +99,9 @@ func timestamp() string {
 	return time.Now().In(t).Format("[15:04:05.000000]")
 }
 
-//Test if order is always correct
-//Test speed
-//Test server sending to wrong clients or vice versa
+
+
+// Use this to check which clients the server has stored
+// for _, info := range clients {
+// 	fmt.Println(info.address.String(), info.lastSeen)
+// }	

@@ -40,9 +40,9 @@ func main(){
 		buf := make([]byte, 1024)
 		for{
 			n, _, err := conn.ReadFromUDP(buf)
-			timeTaken := time.Since(startTime).Seconds()
-			precision := fmt.Sprintf("%.6f", timeTaken)
-			fmt.Println("Round Trip time: ", precision)
+			// timeTaken := time.Since(startTime).Seconds()		//Round Trip Testing
+			// precision := fmt.Sprintf("%.6f", timeTaken)		//Round Trip Testing
+			// fmt.Println("Round Trip time: ", precision)		//Round Trip Testing
 			if err != nil{
 				fmt.Println("Error reading from server: ", err)
 				return
@@ -59,7 +59,7 @@ func main(){
 		}
 		text = *name + ": " + text
 		_, err := conn.Write([]byte(text))									//Post message to server
-		startTime = time.Now()
+		// startTime = time.Now()		//Round Trip Testing
 		if err != nil{
 			fmt.Println("Error writing to server: ", err)
 			break
@@ -71,3 +71,16 @@ func timestamp() string {
 	t := time.FixedZone("America/Chicago (No DST)", -6*60*60)
 	return time.Now().In(t).Format("[15:04:05.000000]")
 }
+
+
+// Use this for packet order testing
+// for i := 0; i <= 9; i++{
+// 	newText := text + fmt.Sprintf("%d", i)
+// 	_, err := conn.Write([]byte(newText))
+// 	time.Sleep(10 * time.Millisecond)
+// 	// startTime = time.Now()		//Round Trip Testing
+// 	if err != nil{
+// 		fmt.Println("Error writing to server: ", err)
+// 		break
+// 	}
+// }

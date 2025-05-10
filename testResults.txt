@@ -1,31 +1,67 @@
-Round-Trip (Latency) Testing:
+Screenshots of some tests are provided in the tests directory. Note in the screenshots that Round Trip Time is not always relevant.
+
+Round-Trip / Latency Testing
 
     To measure rount-trip time of sending and receiving messages to the server, I disabled my block that prevents messages from being echoed back to the sender. I then started a timer immediately after writing to the server and stopped the timer immediately after reading from the server. Results are in seconds. The code used is included in client.go but commented out.
 
-    Test #1 (2-3 letter messages):
-        Client #1:
-            0.000329
-            0.000191
-            0.000213
-        Client #2:
-            0.000872
-            0.000423
-            0.000203
-        Client #3 (server restart):
-            0.000190
-            0.000482
-            0.000022
-        Client #3 (15-16 letter messages):
-            0.000211
-            0.000224
-            0.000167
+    Test #1:
+        0.000347
+        0.000326
+        0.000374
+        0.000354
+        0.000469
 
-        Average Time (12 runs): 0.000294
+    Test #2:
+        0.000470
+        0.000187
+        0.000228
+        0.000464
+    
+    Average Time: 0.000358
+
+
+Packet Loss Testing:
+
+    To test for packet loss, I ran this command in my machine to give packets a 30% change of being lost:
+
+    sudo tc qdisc add dev lo root netem loss 30%
+
+    Test #1:
+        I then sent 10 messages from one client (A-J). 
+        The server didn't receive the A or the I packet. (2/10 loss)
+        Of the 8 packets that the server sent back, the sending client didn't receive the B, D, or F packet. (3/8 loss)
+        The other client that was connected didn't recieve the H or J packet. (2/8 loss)
+
+    Test #2 (Duplicate):
+        Sent 10 messages from one client (A-J).
+        The server didn't receive the C, F, H, or I packet. (4/10 loss)
+        The sending client didn't get back the G or J packet. (2/6 loss) (It also lost its joining message.)
+        The other client didn't get back the D or E packet. (2/6 loss)
+
+    Conclusion: there were no crashes, disconnects, or resends because the UDP protocol does not check for complete arrival. 
 
 
 Packet Order Testing:
 
+    To test packet arrival order, I rand this command in my machine to give 25% packets a 50% chance of being rearranged:
 
+    sudo tc qdisc add dev lo root netem delay 100ms 20ms reorder 25% 50%
+
+    I also adjusted my sending code to send 10 messages in quick succession using a loop.
+
+    Test #3:
+        Original Order           = 0,1,2,3,4,5,6,7,8,9
+        Server Reception         = 1,2,0,3,5,4,6,8,7,9
+        Sending Client Reception = 0,4,6,2,1,3,5,9,8,7
+        Other Client Reception   = 1,2,5,4,9,3,0,6,8,7
+
+    Test #4 (Duplicate):
+        Original Order           = 0,1,2,3,4,5,6,7,8,9
+        Server Reception         = 5,8,0,3,1,4,2,7,6,9
+        Sending Client Reception = 5,8,1,3,0,4,2,7,6,9
+        Other Client Reception   = 5,8,1,4,0,2,3,7,9,6
+
+    Conclusion: UDP does not verify the order of the packets received.
 
 
 Connectionless Protocol Testing:
@@ -34,8 +70,6 @@ Connectionless Protocol Testing:
 
     Similarly, if the server restarts, clients will continue messaging the server as if nothing has happened, because there is no official connection.
 
-
-Packet Loss Testing:
 
 
 
