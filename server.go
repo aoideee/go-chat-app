@@ -43,10 +43,10 @@ func main(){
 			for k, v := range clients{
 				if time.Now().Sub(v.lastSeen) > (3 * time.Minute){
 					// fmt.Println(v.address.String(), " has been inactive for 3 minutes and will be removed.")
-					// message := "You have been inactive for 3 minutes and will be removed."
-					// if _, err := listener.WriteToUDP([]byte(message), v.address); err != nil{
-					// 	fmt.Println("Error writing to client ", address.String(), ":", err)
-					// }
+					message := "You have been inactive for 3 minutes and will be removed."
+					if _, err := listener.WriteToUDP([]byte(message), v.address); err != nil{
+						fmt.Println("Error writing to client ", address.String(), ":", err)
+					}
 					mutex.Lock()
 					delete(clients, k)
 					mutex.Unlock()
@@ -89,11 +89,11 @@ func main(){
 		}		
 
 		for _, info := range clients {												//Write messages to all clients
-			if info.address != clientAddress{
+			// if info.address != clientAddress{
 				if _, err := listener.WriteToUDP([]byte(message), info.address); err != nil{
 					fmt.Println("Error writing to client ", info.address.String(), ":", err)
 				}
-			}
+			// }
 		}
 	}
 }
@@ -102,10 +102,6 @@ func timestamp() string {
 	t := time.FixedZone("America/Chicago (No DST)", -6*60*60)
 	return time.Now().In(t).Format("[15:04:05.000000]")
 }
-
-
-
-//Advancements: could add client timeout and removal
 
 //Test if order is always correct
 //Test speed

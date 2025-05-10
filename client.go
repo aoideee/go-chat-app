@@ -11,6 +11,8 @@ import(
 	"time"
 )
 
+var startTime time.Time
+
 func main(){
 
 	name := flag.String("name", "Unknown_Client", "Client name")
@@ -38,6 +40,9 @@ func main(){
 		buf := make([]byte, 1024)
 		for{
 			n, _, err := conn.ReadFromUDP(buf)
+			timeTaken := time.Since(startTime).Seconds()
+			precision := fmt.Sprintf("%.6f", timeTaken)
+			fmt.Println("Round Trip time: ", precision)
 			if err != nil{
 				fmt.Println("Error reading from server: ", err)
 				return
@@ -54,6 +59,7 @@ func main(){
 		}
 		text = *name + ": " + text
 		_, err := conn.Write([]byte(text))									//Post message to server
+		startTime = time.Now()
 		if err != nil{
 			fmt.Println("Error writing to server: ", err)
 			break
@@ -63,5 +69,5 @@ func main(){
 
 func timestamp() string {
 	t := time.FixedZone("America/Chicago (No DST)", -6*60*60)
-	return time.Now().In(t).Format("[15:04:05]")
+	return time.Now().In(t).Format("[15:04:05.000000]")
 }

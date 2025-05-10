@@ -1,0 +1,45 @@
+Round-Trip (Latency) Testing:
+
+    To measure rount-trip time of sending and receiving messages to the server, I disabled my block that prevents messages from being echoed back to the sender. I then started a timer immediately after writing to the server and stopped the timer immediately after reading from the server. Results are in seconds. The code used is included in client.go but commented out.
+
+    Test #1 (2-3 letter messages):
+        Client #1:
+            0.000329
+            0.000191
+            0.000213
+        Client #2:
+            0.000872
+            0.000423
+            0.000203
+        Client #3 (server restart):
+            0.000190
+            0.000482
+            0.000022
+        Client #3 (15-16 letter messages):
+            0.000211
+            0.000224
+            0.000167
+
+        Average Time (12 runs): 0.000294
+
+
+Packet Order Testing:
+
+
+
+
+Connectionless Protocol Testing:
+
+    To test whether there could be issues with sending data to the wrong client, I set up two clients. The server sent responses to both clients. Then I closed one client, but the server still attempted to send responses to both. Since there is no official connection, the server has no way of knowing if a client is actually receiving messages, so it simply sends out messages to all the addresses it has received from until they time out. This means that if a new client would join using the previous client's old address, they would receive messages intended for the previous client.
+
+    Similarly, if the server restarts, clients will continue messaging the server as if nothing has happened, because there is no official connection.
+
+
+Packet Loss Testing:
+
+
+
+
+
+
+
