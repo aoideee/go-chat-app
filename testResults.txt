@@ -43,7 +43,7 @@ Packet Loss Testing:
 
 Packet Order Testing:
 
-    To test packet arrival order, I rand this command in my machine to give 25% packets a 50% chance of being rearranged:
+    To test packet arrival order, I ran this command in my machine to give 25% packets a 50% chance of being rearranged:
 
     sudo tc qdisc add dev lo root netem delay 100ms 20ms reorder 25% 50%
 

@@ -84,7 +84,7 @@ func main(){
 		}
 		mutex.Unlock()	
 
-		for _, info := range clients {												//Write messages to all clients
+		for _, info := range clients {													//Write messages to all clients
 			if info.address != clientAddress{
 				if _, err := listener.WriteToUDP([]byte(message), info.address); err != nil{
 					fmt.Println("Error writing to client ", info.address.String(), ":", err)

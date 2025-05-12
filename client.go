@@ -15,7 +15,7 @@ var startTime time.Time
 
 func main(){
 
-	name := flag.String("name", "Unknown_Client", "Client name")
+	name := flag.String("name", "Unknown_Client", "Client name")			//Name Flag
 	flag.Parse()
 
 	serverAddress := net.UDPAddr{											//Set the same server address
@@ -29,7 +29,6 @@ func main(){
 	}
 	defer conn.Close()
 	fmt.Println("You have joined the chat and may start messaging.")
-	//localAddress := conn.LocalAddr().(*net.UDPAddr)
 	arrivalMessage := *name + " has arrived!"
 	_, err = conn.Write([]byte(arrivalMessage))
 	if err != nil{
@@ -54,7 +53,7 @@ func main(){
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan(){
 		text := scanner.Text()
-		if text == ""{														//Don't write post message if empty
+		if text == ""{														//Don't write message if empty
 			continue
 		}
 		text = *name + ": " + text
