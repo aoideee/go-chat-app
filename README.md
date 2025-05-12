@@ -2,6 +2,8 @@
 
 A minimal multi-client TCP chat application in Go, now extended with an automated testing mode for Phase 3: Testing & Data Collection.
 
+## YouTube Video Link
+
 ## Automated Testing Mode
 
 Phase 3 uses two test runs—**baseline** (no impairment) and **impaired** (with packet delay & loss).
