@@ -3,6 +3,8 @@
 A minimal multi-client TCP chat using Go.  
 Supports reliable, ordered messaging with timestamped logs.
 
+## YouTube Video Link
+
 ## Prerequisites
 
 - Go 1.18+ installed
