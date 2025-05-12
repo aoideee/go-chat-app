@@ -39,7 +39,7 @@ func main(){
 		buf := make([]byte, 1024)
 		for{
 			n, _, err := conn.ReadFromUDP(buf)
-			// timeTaken := time.Since(startTime).Seconds()		//Round Trip Testing
+			// timeTaken := time.Since(startTime).Seconds()	//Round Trip Testing
 			// precision := fmt.Sprintf("%.6f", timeTaken)		//Round Trip Testing
 			// fmt.Println("Round Trip time: ", precision)		//Round Trip Testing
 			if err != nil{
@@ -57,11 +57,15 @@ func main(){
 			continue
 		}
 		text = *name + ": " + text
-		_, err := conn.Write([]byte(text))									//Post message to server
-		// startTime = time.Now()		//Round Trip Testing
-		if err != nil{
-			fmt.Println("Error writing to server: ", err)
-			break
+		for i := 0; i <= 99; i++{
+			newText := text + fmt.Sprintf("%d", i)
+			_, err := conn.Write([]byte(newText))									//Post message to server
+			// startTime = time.Now()				//Round Trip Testing
+			// time.Sleep(500 * time.Millisecond)	//Round Trip Testing
+			if err != nil{
+				fmt.Println("Error writing to server: ", err)
+				break
+			}
 		}
 	}
 }

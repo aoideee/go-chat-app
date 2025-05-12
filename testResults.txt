@@ -17,7 +17,12 @@ Round-Trip / Latency Testing
         0.000228
         0.000464
     
-    Average Time: 0.000358
+    Average Time (One-at-a-time messages): 0.000358
+
+    Test #5:
+        This yielded a time slower than the TCP chat app, but since we tested that one by batch sending many messages at a time, I made a new file (clientRTT.go) in the tests directory to send 100 messages at a time and display the times. This yielded a different result.
+
+    Average Time (Batch messaging): 0.000206
 
 
 Packet Loss Testing:
@@ -35,10 +40,15 @@ Packet Loss Testing:
     Test #2 (Duplicate):
         Sent 10 messages from one client (A-J).
         The server didn't receive the C, F, H, or I packet. (4/10 loss)
-        The sending client didn't get back the G or J packet. (2/6 loss) (It also lost its joining message.)
+        The sending client didn't get back the G or J packet. (2/6 loss)
         The other client didn't get back the D or E packet. (2/6 loss)
 
-    Conclusion: there were no crashes, disconnects, or resends because the UDP protocol does not check for complete arrival. 
+    Total packets sent: 48
+    Total packets lost: 15
+    Percent Lost: 31.3%
+    Condition: Each packet was considered as two packets, one going from client to server and one from server to client.
+
+    Note: There were no crashes, disconnects, or resends because the UDP protocol does not check for complete arrival. 
 
 
 Packet Order Testing:
@@ -50,18 +60,23 @@ Packet Order Testing:
     I also adjusted my sending code to send 10 messages in quick succession using a loop.
 
     Test #3:
-        Original Order           = 0,1,2,3,4,5,6,7,8,9
-        Server Reception         = 1,2,0,3,5,4,6,8,7,9
-        Sending Client Reception = 0,4,6,2,1,3,5,9,8,7
-        Other Client Reception   = 1,2,5,4,9,3,0,6,8,7
+        Original Order           = 0,1,2,3,4,5,6,7,8,9                  
+        Server Reception         = 1,2,0,3,5,4,6,8,7,9          (3 unordered)
+        Sending Client Reception = 0,4,6,2,1,3,5,9,8,7          (5 unordered)
+        Other Client Reception   = 1,2,5,4,9,3,0,6,8,7          (3 unordered)
 
     Test #4 (Duplicate):
         Original Order           = 0,1,2,3,4,5,6,7,8,9
-        Server Reception         = 5,8,0,3,1,4,2,7,6,9
-        Sending Client Reception = 5,8,1,3,0,4,2,7,6,9
-        Other Client Reception   = 5,8,1,4,0,2,3,7,9,6
+        Server Reception         = 5,8,0,3,1,4,2,7,6,9          (5 unordered)
+        Sending Client Reception = 5,8,1,3,0,4,2,7,6,9          (2 unordered)
+        Other Client Reception   = 5,8,1,4,0,2,3,7,9,6          (2 unordered)
 
-    Conclusion: UDP does not verify the order of the packets received.
+        Total packets sent: 60
+        Total packets rearranged: 20
+        Percent rearranged: 30%
+
+    Condition: The results were determined by counting how many numbers had to be rearranged for the order to be fixed and may not be precise. Each packet was considered as two packets, one going from client to server and one from server to client.
+    Note: UDP does not verify the order of the packets received.
 
 
 Connectionless Protocol Testing:
