@@ -4,7 +4,8 @@ A minimal multi-client TCP chat using Go.
 Supports reliable, ordered messaging with timestamped logs.
 
 ## YouTube Video Link
-[https://youtu.be/jgukQwkqxno?si=5bc-PYkmIA373Qvo] Final Chat Apps Presentation
+
+[Final Chat Apps Presentation](https://youtu.be/jgukQwkqxno?si=5bc-PYkmIA373Qvo)
 
 ## Prerequisites
 
