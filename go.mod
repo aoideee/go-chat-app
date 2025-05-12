@@ -1,3 +1,3 @@
-module github.com/aoideee/chat_app_tcp
+module github.com/aoideee/tcp_chat_app
 
 go 1.22.2

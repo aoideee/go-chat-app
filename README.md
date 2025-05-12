@@ -15,11 +15,11 @@ go run main.go -mode server -port 9000
 ### 1. Baseline Test
 
 ```bash
-go run main.go \
-  -mode client \
+cd client
+go run client.go \
   -host 127.0.0.1 \
   -port 9000 \
-  -name Tysha \
+  -name yourname \
   -test \
   -count 100 \
   -interval 500ms \
@@ -43,11 +43,10 @@ sudo tc qdisc add dev lo root netem delay 100ms loss 5%
 
 Back in the client terminal:
 ```bash
-go run main.go \
-  -mode client \
+go run client.go \
   -host 127.0.0.1 \
   -port 9000 \
-  -name Tysha \
+  -name yourname \
   -test \
   -count 100 \
   -interval 500ms \
