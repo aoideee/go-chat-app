@@ -10,7 +10,7 @@ Phase 3 uses two test runs—**baseline** (no impairment) and **impaired** (with
 
 ```bash
 cd server
-go run main.go -mode server -port 9000
+go run server.go -port 9000
 ```
 
 ### 1. Baseline Test
